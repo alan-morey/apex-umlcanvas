@@ -28,14 +28,15 @@ public class UmlService
 {
 	private static ToolingApi.SymbolTable augumentSymbolTable(ToolingApi.SymbolTable symbolTable)
 	{
-		Map<String, ApexClass> classes = new ApexClassesSelector().selectByName(new List<String> { symbolTable.name }); 
+		Map<String, ApexClass> classes = new ApexClassesSelector().selectByName(new List<String> { symbolTable.name });
 		
 		list<string> classBodyLines = classes.get( symbolTable.name ).body.split('\n');
-		
-		if ( classBodyLines[symbolTable.tableDeclaration.location.line - 1].containsIgnoreCase(' interface ') )
-		{
-			symbolTable.isInterface = true;
-		}
+        
+        String classDeclarationLine = classBodyLines[symbolTable.tableDeclaration.location.line - 1].normalizeSpace();
+        Set<String> tokens = new Set<String>(classDeclarationLine.split(' '));
+
+        symbolTable.isInterface = tokens.contains('interface');
+        symbolTable.isAbstract = tokens.contains('abstract');
 
 		return symbolTable;
 	}

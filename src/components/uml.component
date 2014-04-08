@@ -275,7 +275,11 @@ var ApexNavigator = {
         }
         else
         {
-            apexUMLClass = new UmlCanvas.Class( { name: className } );
+            apexUMLClass = new UmlCanvas.Class({
+                name: className,
+                stereotype: classSymbolTable.isAbstract ? 'abstract' : '',
+                isAbstract: classSymbolTable.isAbstract
+            });
         }
         
         // Add methods
